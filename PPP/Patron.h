@@ -4,6 +4,7 @@
 class Patron
 {
 public:
+	Patron(int ID, std::string name, int init_fees);
 	int get_card_number() const { return lib_card_num; }
 	std::string get_usr_name() const { return usr_name; }
 	int get_lib_fees() const { return lib_fees; }
@@ -17,3 +18,5 @@ private:
 	int lib_fees;
 
 };
+
+std::ostream& operator<<(std::ostream& os, Patron& p);

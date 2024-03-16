@@ -12,6 +12,7 @@ public:
 private:
 	struct Transaction
 	{
+		Transaction(Book& b, Patron& p, Chrono::Date& d);
 		Book book;
 		Patron patron;
 		Chrono::Date date;
@@ -20,3 +21,5 @@ private:
 	std::vector<Book> books;
 	std::vector<Patron> patrons;
 };
+
+bool operator==(Patron& p1, Patron& p2);
