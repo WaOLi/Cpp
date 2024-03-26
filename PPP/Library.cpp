@@ -25,15 +25,28 @@ void Library::checkout_book(Book& b, Patron& p, Chrono::Date& d)
 				if (p_ == p)
 				{
 					b_.check_out();
-					//Transaction t};
-					//t.book = b_;
-					
-					//transactions.push_back(t);
+					Transaction t(b_, p_, Chrono::Date(12, 1996, Chrono::Month::feb));
+
+					transactions.push_back(t);
 				}
 			}
 		}
 	}
 	std::cerr << "cannot checkout " << b;
+}
+
+std::vector<Patron>& Library::get_owers()
+{
+	// TODO: insert return statement here
+	std::vector<Patron> result;
+	for (Patron p : patrons)
+	{
+		if (p.get_lib_fees() > 0)
+		{
+			result.push_back(p);
+		}
+	}
+	return result;
 }
 
 bool operator==(Patron& p1, Patron& p2)
@@ -45,7 +58,7 @@ bool operator==(Patron& p1, Patron& p2)
 	return false;
 }
 
-Library::Transaction::Transaction(Book& b, Patron& p, Chrono::Date& d)
+Library::Transaction::Transaction(Book& b, Patron& p, Chrono::Date d)
 	:book{ b }, patron{ p }, date{ d }
 {
 }

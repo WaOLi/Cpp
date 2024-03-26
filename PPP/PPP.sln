@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34616.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PPP", "PPP.vcxproj", "{FD62D65D-5768-4D30-A271-2B9E532FEA50}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Unit9", "PPP.vcxproj", "{FD62D65D-5768-4D30-A271-2B9E532FEA50}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "chronos", "..\chronos\chronos.vcxproj", "{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "13exercise", "..\13exercise\13exercise.vcxproj", "{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,22 @@ Global
 		{FD62D65D-5768-4D30-A271-2B9E532FEA50}.Release|x64.Build.0 = Release|x64
 		{FD62D65D-5768-4D30-A271-2B9E532FEA50}.Release|x86.ActiveCfg = Release|Win32
 		{FD62D65D-5768-4D30-A271-2B9E532FEA50}.Release|x86.Build.0 = Release|Win32
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Debug|x64.ActiveCfg = Debug|x64
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Debug|x64.Build.0 = Debug|x64
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Debug|x86.Build.0 = Debug|Win32
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Release|x64.ActiveCfg = Release|x64
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Release|x64.Build.0 = Release|x64
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Release|x86.ActiveCfg = Release|Win32
+		{85510B40-F550-4DE8-A4F6-3DA71C2A92D6}.Release|x86.Build.0 = Release|Win32
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Debug|x64.ActiveCfg = Debug|x64
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Debug|x64.Build.0 = Debug|x64
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Debug|x86.ActiveCfg = Debug|Win32
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Debug|x86.Build.0 = Debug|Win32
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Release|x64.ActiveCfg = Release|x64
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Release|x64.Build.0 = Release|x64
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Release|x86.ActiveCfg = Release|Win32
+		{1A9041BD-606A-4C2D-8032-D9C4B2B02E9C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
