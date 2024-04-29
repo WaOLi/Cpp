@@ -141,7 +141,7 @@ Money& operator>>(std::istream& is, Money& mon)
 		else
 		{
 			passed_a_digit = true;
-			if()
+			//if()
 		}
 	}
 
