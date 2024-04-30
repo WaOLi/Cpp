@@ -43,11 +43,13 @@ int main()
 	std::uniform_int<> distr_starting_year(1900, 2000);
 	std::uniform_int<> distr_number_of_years(2, 4);
 
-	unsigned short starting_year{ unsigned short(distr_starting_year(rd)) },
-		number_of_years{ unsigned short(distr_number_of_years(rd)) };
+
+	unsigned short starting_year{ unsigned short(distr_starting_year(rd)) };
+	unsigned short number_of_years{ unsigned short(distr_number_of_years(rd)) };
 
 	Month m;
 	std::cin >> m;
+	std::cout << m;
 
 	/*Reading r;
 	std::cin >> r;

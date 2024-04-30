@@ -19,7 +19,7 @@ std::istream& operator>>(std::istream& is, Reading& r)
 	{
 		is.unget();
 		is.clear(std::ios_base::failbit);
-		throw Error{};
+		return is;
 	}
 
 	int d, h;
@@ -27,7 +27,11 @@ std::istream& operator>>(std::istream& is, Reading& r)
 
 	is >> d >> h >> t >> c;
 
-	if (!is || c != ')') throw Error{};
+	if (!is || c != ')')
+	{
+		std::cerr << "wront end of a reading";
+		throw Error{};
+	}
 
 	r.day = d;
 	r.hour = h;

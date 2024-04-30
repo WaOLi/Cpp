@@ -7,7 +7,7 @@ unsigned short month_string_to_int(std::string& mon)
 		"jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec",
 	};
 
-	for (int i{};i < mon_names.size();i++)
+	for (int i{}; i < mon_names.size(); i++)
 	{
 		if (mon == mon_names[i])
 		{
@@ -59,6 +59,7 @@ std::istream& operator>>(std::istream& is, Month& m)
 	{
 		is.unget();
 		is.clear(std::ios_base::failbit);
+		std::cerr << "wrong start of the input";
 		throw Error{};
 	}
 
@@ -69,14 +70,16 @@ std::istream& operator>>(std::istream& is, Month& m)
 		throw Error{};
 	}
 	is >> mm;
-	if (unsigned short month{ month_string_to_int(mm) })
+
+	unsigned short month{ month_string_to_int(mm) };
+
+	if (month == not_a_month)
 	{
-		if (month == not_a_month)
-		{
-			std::cerr << "not a month";
-			throw Error{};
-		}
+		std::cerr << "not a month";
+		throw Error{};
 	}
+
+	m.month = month;
 
 	unsigned int duplicates{}, invalids{};
 
@@ -96,12 +99,21 @@ std::istream& operator>>(std::istream& is, Month& m)
 		}
 	}
 
-	if (duplicates || invalids)
+	if (duplicates)
+	{
+		std::cerr << "duplicates present";
+		throw Error{};
+	}
+
+	if (invalids)
 	{
 		std::cerr << "duplicates or invalid readings present";
 		throw Error{};
 	}
-	
+	if (is.fail())
+	{
+		is.clear(std::ios_base::goodbit);
+	}
 	if (is >> c && c != '}')
 	{
 		std::cerr << "invalid ending of the month";
@@ -114,10 +126,20 @@ std::istream& operator>>(std::istream& is, Month& m)
 std::ostream& operator<<(std::ostream& os, const Month& m)
 {
 	// TODO: insert return statement here
-	std::cout << '{';
-	for (int i{1}; i < m.day.size();)
+	os << '{' << "month " << month_int_to_string(m.month) << ' ';
+
+	for (int i{ 1 }; i < m.day.size();i++)
 	{
-		if(m.day[i].hour)
+		for (int j{}; j < m.day[0].hour.size(); j++)
+		{
+			if (m.day[i].hour[j] != not_a_reading)
+			{
+				os << '(' << i << ' ' << j << ' ' << m.day[i].hour[j] << ')';
+			}
+		}
 	}
-	return os;
+	return os << '}';
 }
+
+
+//{month jan (1 2 3)}
