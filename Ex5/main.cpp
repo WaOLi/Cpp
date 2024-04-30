@@ -46,6 +46,9 @@ int main()
 	unsigned short starting_year{ unsigned short(distr_starting_year(rd)) },
 		number_of_years{ unsigned short(distr_number_of_years(rd)) };
 
+	Month m;
+	std::cin >> m;
+
 	/*Reading r;
 	std::cin >> r;
 	std::cout << r;*/

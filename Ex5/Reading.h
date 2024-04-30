@@ -9,6 +9,8 @@ struct Reading
 	double temperature;
 };
 
+bool is_valid(const Reading& r);
+
 std::istream& operator>>(std::istream& is, Reading& r);
 
 std::ostream& operator<<(std::ostream& os, const Reading& r);

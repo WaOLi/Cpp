@@ -35,13 +35,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Month.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Year.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Reading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Month.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
