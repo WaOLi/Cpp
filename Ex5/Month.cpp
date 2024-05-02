@@ -4,7 +4,7 @@ unsigned short month_string_to_int(std::string& mon)
 {
 	std::vector<std::string> mon_names
 	{
-		"jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec",
+		"jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"
 	};
 
 	for (int i{}; i < mon_names.size(); i++)
@@ -59,8 +59,7 @@ std::istream& operator>>(std::istream& is, Month& m)
 	{
 		is.unget();
 		is.clear(std::ios_base::failbit);
-		std::cerr << "wrong start of the input";
-		throw Error{};
+		return is;
 	}
 
 	std::string month_key, mm;
@@ -140,6 +139,3 @@ std::ostream& operator<<(std::ostream& os, const Month& m)
 	}
 	return os << '}';
 }
-
-
-//{month jan (1 2 3)}

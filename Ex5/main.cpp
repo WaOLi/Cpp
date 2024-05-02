@@ -12,6 +12,11 @@ another randome (2, 4) will state for how many
 years the readings will be generated
 
 
+For each year the program will generate a
+random in range (3, 11) to specify the number
+of month to be populated with data
+
+
 For each month the program will generate a
 random number in the range (15, 32)that's
 the number of days in the current month
@@ -19,7 +24,7 @@ for which there will be generated readings
 
 
 For each day there will be generated a
-random (4, 24) int specifying the hours 
+random (4, 23) int specifying the hours 
 for which the temperature readings
 will be generated
 
@@ -40,18 +45,27 @@ int main()
 	std::mt19937 get(rd());
 
 
-	std::uniform_int<> distr_starting_year(1900, 2000);
+	std::uniform_int_distribution<> distr_year(1900, 2000);
 	std::uniform_int<> distr_number_of_years(2, 4);
 
-
-	unsigned short starting_year{ unsigned short(distr_starting_year(rd)) };
 	unsigned short number_of_years{ unsigned short(distr_number_of_years(rd)) };
 
-	Month m;
-	std::cin >> m;
-	std::cout << m;
 
-	/*Reading r;
-	std::cin >> r;
-	std::cout << r;*/
+	std::uniform_int_distribution<> distr_days_in_a_month(15, 32);
+	std::uniform_int_distribution<> distr_hours_in_a_day(4, 23);
+
+	//first assignment: generate a bunch of unique years and put them into the vector
+
+	unsigned short* used_years = new unsigned short[ number_of_years ];
+	std::vector<Year> year{};
+	for (int i{}; i < number_of_years; i++)
+	{
+		unsigned short curr_year = distr_
+	}
+
+	/*Month m;
+	m.day = std::vector<Day>(unsigned short(distr_days_in_a_month(rd)));
+	
+	unsigned short hours_in_a_day{ unsigned short(distr_hours_in_a_day(rd)) };*/
+	
 }

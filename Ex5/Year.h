@@ -3,8 +3,8 @@
 
 struct Year
 {
-	unsigned int year{};
-	std::vector<Month> month{ 12 };
+	unsigned short year{};
+	std::vector<Month> month{std::vector<Month>(12)};
 };
 
 std::istream& operator>>(std::istream& is, Year& y);
