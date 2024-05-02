@@ -71,3 +71,8 @@ std::ostream& operator<<(std::ostream& os, Year& y)
 
 
 //{year 1992 {month feb (1 2 3)}{month dec (5 1 23.41)(5 2 -12.43)}}
+
+Year::Year(unsigned short y)
+    :year{y}
+{
+}

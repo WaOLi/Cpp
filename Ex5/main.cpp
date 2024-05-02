@@ -57,11 +57,30 @@ int main()
 	//first assignment: generate a bunch of unique years and put them into the vector
 
 	unsigned short* used_years = new unsigned short[ number_of_years ];
+
 	std::vector<Year> year{};
+	unsigned short curr_year{ unsigned short(distr_year(rd)) };
 	for (int i{}; i < number_of_years; i++)
 	{
-		unsigned short curr_year = distr_
+		for (const Year& y : year)
+		{
+			if (y.year == curr_year)
+			{
+				i--;
+				curr_year = unsigned short(distr_year(rd));
+				continue;
+			}
+		}
+		used_years[i] = curr_year;
+		year.push_back(Year{ curr_year });
 	}
+
+	for (Year& y : year)
+	{
+		std::cout << y;
+	}
+	
+
 
 	/*Month m;
 	m.day = std::vector<Day>(unsigned short(distr_days_in_a_month(rd)));
