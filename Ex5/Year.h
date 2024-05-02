@@ -6,6 +6,7 @@ struct Year
 	unsigned short year{};
 	std::vector<Month> month{std::vector<Month>(12)};
 
+	Year();
 	Year( unsigned short y );
 };
 

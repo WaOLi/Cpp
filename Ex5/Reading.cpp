@@ -42,5 +42,5 @@ std::istream& operator>>(std::istream& is, Reading& r)
 
 std::ostream& operator<<(std::ostream& os, const Reading& r)
 {
-	return os << '(' << r.day << ' ' << r.hour << ' ' << r.temperature << ')';
+	return os << '(' << r.day << ' ' << r.hour << ' ' << r.temperature << ")\n\t\t";
 }

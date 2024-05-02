@@ -125,7 +125,7 @@ std::istream& operator>>(std::istream& is, Month& m)
 std::ostream& operator<<(std::ostream& os, const Month& m)
 {
 	// TODO: insert return statement here
-	os << '{' << "month " << month_int_to_string(m.month) << ' ';
+	os << "\n\t\t{\n\t\t\t" << "month " << month_int_to_string(m.month) << ' ';
 
 	for (int i{ 1 }; i < m.day.size();i++)
 	{
@@ -133,9 +133,9 @@ std::ostream& operator<<(std::ostream& os, const Month& m)
 		{
 			if (m.day[i].hour[j] != not_a_reading)
 			{
-				os << '(' << i << ' ' << j << ' ' << m.day[i].hour[j] << ')';
+				os << "\n\t\t\t\t(" << i << ' ' << j << ' ' << m.day[i].hour[j] << ')';
 			}
 		}
 	}
-	return os << '}';
+	return os << "\n\t}\n\t";
 }

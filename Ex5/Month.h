@@ -6,7 +6,7 @@ static constexpr int not_a_month{ -1 };
 struct Month
 {
 	int month{ not_a_month };
-	std::vector<Day> day{ 32 };
+	std::vector<Day> day{ std::vector<Day>(32) };
 };
 
 unsigned short month_string_to_int(std::string& mon);

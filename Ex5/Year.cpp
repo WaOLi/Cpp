@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& is, Year& y)
 std::ostream& operator<<(std::ostream& os, Year& y)
 {
     // TODO: insert return statement here
-    os << '{' << "year " << y.year << ' ';
+    os << "\n{\n\t" << "year " << y.year << ' ';
     for (const Month& m : y.month)
     {
         if (m.month != not_a_month)
@@ -66,11 +66,16 @@ std::ostream& operator<<(std::ostream& os, Year& y)
             os << m;
         }
     }
-    return os << '}';
+    return os << "\n}\n";
 }
 
 
 //{year 1992 {month feb (1 2 3)}{month dec (5 1 23.41)(5 2 -12.43)}}
+
+Year::Year()
+    :year{0}
+{
+}
 
 Year::Year(unsigned short y)
     :year{y}
