@@ -68,7 +68,6 @@ int main()
 	std::uniform_int_distribution<> distr_hours_in_a_day(4, 23);
 
 	//first assignment: generate a bunch of unique years and put them into the vector
-
 	std::vector<Year> year{};
 	unsigned short curr_year{ unsigned short(distr_year(rd)) };
 	bool is_copy{};
@@ -136,14 +135,10 @@ int main()
 		populate_year(y);
 	}
 
+	std::ofstream ofs{ "readings.txt" };
+	for (Year& y : year)
 	{
-		std::ofstream ofs{ "readings.txt" };
-
-
-		for (Year& y : year)
-		{
-			ofs << y;
-		}
+		ofs << y;
 	}
 
 
@@ -230,14 +225,6 @@ const Month& populate_month(Month& m)
 			populate_day_with_readings(m.day[day_ind]);
 		}
 	}
-
-
-
-
-	for (Day& dd : m.day)
-	{
-		populate_day_with_readings(dd);
-	}
 	return m;
 }
 
@@ -245,7 +232,10 @@ const Year& populate_year(Year& y)
 {
 	for (Month& mm : y.month)
 	{
-		populate_month(mm);
+		if (mm.month != not_a_month)
+		{
+			populate_month(mm);
+		}
 	}
 	return y;
 }
