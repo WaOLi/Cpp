@@ -25,7 +25,7 @@ for which there will be generated readings
 
 
 For each day there will be generated a
-random (10, 23) int specifying the hours 
+random (10, 23) int specifying the hours
 for which the temperature readings
 will be generated
 
@@ -53,7 +53,7 @@ const Year& populate_year(Year& y);
 
 int main()
 {
-	
+
 	std::random_device rd;
 	std::mt19937 get(rd());
 
@@ -105,9 +105,9 @@ int main()
 		}
 	}
 
-	
+
 	//populating each year with random number of months
-	std::uniform_int_distribution<> distr_number_of_months(4, 11);
+	std::uniform_int_distribution<> distr_number_of_months(5, 11);
 	std::uniform_int_distribution<> distr_month_index(0, 11);
 	unsigned short num_mon = distr_number_of_months(rd);
 	for (Year& y : year)
@@ -135,29 +135,25 @@ int main()
 		populate_year(y);
 	}
 
-	std::ofstream ofs{ "readings.txt" };
-	for (Year& y : year)
 	{
-		ofs << y;
+		std::ofstream ofs{ "readings.txt" };
+		for (Year& y : year)
+		{
+			ofs << y;
+		}
 	}
+	std::ifstream ifs{ "readings.txt" };
 
+	std::ofstream ofs{ "new_readings.txt" };
 
-	//std::cout << used_days;
+	Year temp_y{};
 
-	//delete[] used_days;
-
-	//std::ifstream ifs{ "readings.txt" };
-	//std::ofstream ofs{ "new_readings.txt" };
-	//Year temp_y{};
-	//while (ifs >> temp_y)
-	//{
-	//	ofs << temp_y;
-	//	temp_y = Year{};
-	//}
-	/*Month m;
-	m.day = std::vector<Day>(unsigned short(distr_days_in_a_month(rd)));
-	
-	unsigned short hours_in_a_day{ unsigned short(distr_hours_in_a_day(rd)) };*/
+	for (int i{}; i< number_of_years;i++)
+	{
+		ifs >> temp_y;
+		ofs << temp_y;
+		temp_y = Year{};
+	}
 }
 
 
@@ -175,12 +171,12 @@ const Day& populate_day_with_readings(Day& d)
 {
 	std::random_device r_d;
 	std::mt19937 get(r_d());
-	std::uniform_int_distribution<> distr_number_of_hours(10, 15);
+	std::uniform_int_distribution<> distr_number_of_hours(11, 23);
 	std::uniform_int_distribution<> distr_hour_ind(0, 23);
 
-	unsigned short number_of_hours{ unsigned short (distr_number_of_hours(r_d)) };
-	unsigned short hour_ind{ unsigned short (distr_hour_ind(r_d)) };
-	for (unsigned short i{} ; i < number_of_hours; i++)
+	unsigned short number_of_hours{ unsigned short(distr_number_of_hours(r_d)) };
+	unsigned short hour_ind{ unsigned short(distr_hour_ind(r_d)) };
+	for (unsigned short i{}; i < number_of_hours; i++)
 	{
 		double& reading_reference = d.hour[hour_ind];
 		if (reading_reference == not_a_reading)
@@ -200,30 +196,29 @@ const Month& populate_month(Month& m)
 {
 	std::random_device r_d;
 	std::mt19937 get(r_d());
-	std::uniform_int_distribution<> distr_number_of_days(5, 8);
+	std::uniform_int_distribution<> distr_number_of_days(15, 23);
 	std::uniform_int_distribution<> distr_day_ind(0, 23);
 	unsigned short number_of_days{ unsigned short(distr_number_of_days(r_d)) };
 	unsigned short day_ind{ unsigned short(distr_day_ind(r_d)) };
-	unsigned short* used_days = new unsigned short(number_of_days);
-	for (int i{}; i < number_of_days; i++)
-	{
-		used_days[i] = 100;
-	}
-	//used_days[0] = day_ind;
+	std::vector<unsigned short> used_days{ std::vector<unsigned short>(number_of_days) };
 
 	for (int i{}; i < number_of_days; i++)
 	{
-		for (int j{}; j < number_of_days; j++)
+		used_days[i] = 300;
+	}
+
+	for (int i{}; i < number_of_days; i++)
+	{
+		for (int j{}; j <= i; j++)
 		{
 			if (used_days[j] == day_ind)
 			{
+				j = -1;
 				day_ind = distr_day_ind(r_d);
-				j--;
-				continue;
 			}
-			used_days[j] = day_ind;
-			populate_day_with_readings(m.day[day_ind]);
 		}
+		used_days[i] = day_ind;
+		populate_day_with_readings(m.day[day_ind]);
 	}
 	return m;
 }
