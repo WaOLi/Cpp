@@ -19,7 +19,6 @@ Happy hunting!
 */
 
 #include "std_lib_facilities.h"
-#include "Roman_int.h"
 
 //------------------------------------------------------------------------------
 
@@ -27,12 +26,12 @@ class Token
 {
 public:
     char kind;        // what kind of token
-    int value;     // for numbers: a value
+    double value;     // for numbers: a value
     Token(char ch)    // make a Token from a char
         :kind(ch), value(0)
     {
     }
-    Token(char ch, int val)     // make a Token from a char and a double
+    Token(char ch, double val)     // make a Token from a char and a double
         :kind(ch), value(val)
     {
     }
@@ -90,21 +89,16 @@ Token Token_stream::get()
     case '(': case ')': case '+': case '-': case '*': case '/':
         return Token(ch);        // let each character represent itself
     case '.':
-        error("this symbol `.` doesn't belong here");
-        return Token('0', 0);
-    case 'X': case 'I': case 'L': case 'M': case 'D':
-    case 'C': case 'V':          // FIX add '8'
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9': // FIX add '8'
     {
         cin.putback(ch);         // put digit back into the input stream
-        Roman_int r{ 1 };
-        cin >> r;
-        int val{ r.as_int() };
-        
+        double val;
+        cin >> val;              // read a floating-point number
         return Token('8', val);   // let '8' represent "a number"
     }
     default:
         error("Bad token");
-        return Token('0', 0);
     }
 }
 
@@ -114,19 +108,19 @@ Token_stream ts;        // provides get() and putback()
 
 //------------------------------------------------------------------------------
 
-int expression();    // declaration so that primary() can call expression()
+double expression();    // declaration so that primary() can call expression()
 
 //------------------------------------------------------------------------------
 
 // deal with numbers and parentheses
-int primary()
+double primary()
 {
     Token t = ts.get();
     switch (t.kind)
     {
     case '(':    // handle '(' expression ')'
     {
-        int d = expression();
+        double d = expression();
         t = ts.get();
         if (t.kind != ')') error("')' expected");
         return d;
@@ -135,16 +129,15 @@ int primary()
         return t.value;  // return the number's value
     default:
         error("primary expected");
-        return 0;
     }
 }
 
 //------------------------------------------------------------------------------
 
 // deal with *, /, and %
-int term()
+double term()
 {
-    int left = primary();
+    double left = primary();
     Token t = ts.get();        // get the next token from token stream
 
     while (true)
@@ -157,8 +150,8 @@ int term()
             break;
         case '/':
         {
-            int d = primary();
-            if (d == 0 || double(left)/d != left/d) error("divide by zero or action resulted in data loss");
+            double d = primary();
+            if (d == 0) error("divide by zero");
             left /= d;
             t = ts.get();
             break;
@@ -173,9 +166,9 @@ int term()
 //------------------------------------------------------------------------------
 
 // deal with + and -
-int expression()
+double expression()
 {
-    int left = term();      // read and evaluate a Term
+    double left = term();      // read and evaluate a Term
     Token t = ts.get();        // get the next token from token stream
 
     while (true)
@@ -217,7 +210,7 @@ try
             return 0;
         }
         ts.putback(t);
-        cout << "= " << Roman_int{ expression() } << endl;
+        cout << "= " << expression() << endl;
     }
     keep_window_open();
     return 0;
@@ -236,3 +229,4 @@ catch (...)
 }
 
 //------------------------------------------------------------------------------
+
