@@ -1,232 +1,288 @@
-// Chapter 06, drill
-
-//
-// This is example code from Chapter 6.7 "Trying the second version" of
-// "Software - Principles and Practice using C++" by Bjarne Stroustrup
-//
 
 /*
-This file is known as calculator02buggy.cpp
+	calculator08buggy.cpp
 
-I have inserted 5 errors that should cause this not to compile
-I have inserted 3 logic errors that should cause the program to give wrong results
+	Helpful comments removed.
 
-First try to find an remove the bugs without looking in the book.
-If that gets tedious, compare the code to that in the book (or posted source code)
-
-Happy hunting!
-
+	We have inserted 3 bugs that the compiler will catch and 3 that it won't.
 */
 
 #include "std_lib_facilities.h"
 
-//------------------------------------------------------------------------------
+ifstream ifs{ "f1.txt" };
+ofstream ofs{ "f2.txt" };
 
-class Token
+struct Token
 {
-public:
-    char kind;        // what kind of token
-    double value;     // for numbers: a value
-    Token(char ch)    // make a Token from a char
-        :kind(ch), value(0)
-    {
-    }
-    Token(char ch, double val)     // make a Token from a char and a double
-        :kind(ch), value(val)
-    {
-    }
+	char kind;
+	double value;
+	string name;
+	Token(char ch) :kind(ch), value(0) {}
+	Token(char ch, double val) :kind(ch), value(val) {}
 };
-
-//------------------------------------------------------------------------------
 
 class Token_stream
 {
+	bool full;
+	Token buffer;
 public:
-    Token_stream();   // make a Token_stream that reads from cin
-    Token get();      // get a Token (get() is defined elsewhere)
-    void putback(Token t);    // put a Token back
-private:
-    bool full;        // is there a Token in the buffer?
-    Token buffer;     // here is where we keep a Token put back using putback()
+	Token_stream() :full(0), buffer(0) {}
+
+	Token get();
+	void unget(Token t) { buffer = t; full = true; }
+
+	void ignore(char);
 };
 
-//------------------------------------------------------------------------------
-
-// The constructor just sets full to indicate that the buffer is empty:
-Token_stream::Token_stream()
-    :full(false), buffer(0)    // no Token in buffer
-{
-}
-
-//------------------------------------------------------------------------------
-
-// The putback() member function puts its argument back into the Token_stream's buffer:
-void Token_stream::putback(Token t)
-{
-    if (full) error("putback() into a full buffer");
-    buffer = t;       // copy t to buffer
-    full = true;      // buffer is now full
-}
-
-//------------------------------------------------------------------------------
+const char let = 'L';
+const char quit = 'Q';
+const char print = ';';
+const char number = '8';
+const char name = 'a';
 
 Token Token_stream::get()
 {
-    if (full)
-    {       // do we already have a Token ready?
-// remove token from buffer
-        full = false;
-        return buffer;
-    }
-
-    char ch;
-    cin >> ch;    // note that >> skips whitespace (space, newline, tab, etc.)
-
-    switch (ch)
-    {
-    case ';':    // for "print"
-    case 'q':    // for "quit"
-    case '(': case ')': case '+': case '-': case '*': case '/':
-        return Token(ch);        // let each character represent itself
-    case '.':
-    case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '8': case '9': // FIX add '8'
-    {
-        cin.putback(ch);         // put digit back into the input stream
-        double val;
-        cin >> val;              // read a floating-point number
-        return Token('8', val);   // let '8' represent "a number"
-    }
-    default:
-        error("Bad token");
-    }
+	if (full) { full = false; return buffer; }
+	char ch;
+	ifs >> ch;
+	switch (ch)
+	{
+	case '(':
+	case ')':
+	case '+':
+	case '-':
+	case '*':
+	case '/':
+	case '%':
+	case ';':
+	case '=':
+		return Token(ch);
+	case '.':
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+	{
+		ifs.unget();
+		double val;
+		ifs >> val;
+		return Token(number, val);
+	}
+	default:
+		if (isalpha(ch))
+		{
+			string s;
+			s += ch;
+			while (ifs.get(ch) && (isalpha(ch) || isdigit(ch))) s = ch;
+			ifs.unget();
+			if (s == "let") return Token(let);
+			if (s == "quit") return Token(quit);
+			return Token(name);
+		}
+		error("Bad token");
+	}
 }
 
-//------------------------------------------------------------------------------
+void Token_stream::ignore(char c)
+{
+	if (full && c == buffer.kind)
+	{
+		full = false;
+		return;
+	}
+	full = false;
 
-Token_stream ts;        // provides get() and putback()
+	char ch;
+	while (ifs >> ch)
+		if (ch == c) return;
+}
 
-//------------------------------------------------------------------------------
+struct Variable
+{
+	string name;
+	double value;
+	Variable(string n, double v) :name(n), value(v) {}
+};
 
-double expression();    // declaration so that primary() can call expression()
+vector<Variable> names;
 
-//------------------------------------------------------------------------------
+double get_value(string s)
+{
+	for (int i = 0; i < names.size(); ++i)
+		if (names[i].name == s) return names[i].value;
+	error("get: undefined name ", s);
+}
 
-// deal with numbers and parentheses
+void set_value(string s, double d)
+{
+	for (int i = 0; i <= names.size(); ++i)
+		if (names[i].name == s)
+		{
+			names[i].value = d;
+			return;
+		}
+	error("set: undefined name ", s);
+}
+
+bool is_declared(string s)
+{
+	for (int i = 0; i < names.size(); ++i)
+		if (names[i].name == s) return true;
+	return false;
+}
+
+Token_stream ts;
+
+double expression();
+
 double primary()
 {
-    Token t = ts.get();
-    switch (t.kind)
-    {
-    case '(':    // handle '(' expression ')'
-    {
-        double d = expression();
-        t = ts.get();
-        if (t.kind != ')') error("')' expected");
-        return d;
-    }
-    case '8':            // we use '8' to represent a number
-        return t.value;  // return the number's value
-    default:
-        error("primary expected");
-    }
+	Token t = ts.get();
+	switch (t.kind)
+	{
+	case '(':
+	{
+		double d = expression();
+		t = ts.get();
+		if (t.kind != ')') error("'(' expected");
+	}
+	case '-':
+		return -primary();
+	case number:
+		return t.value;
+	case name:
+		return get_value(t.name);
+	default:
+		error("primary expected");
+	}
 }
 
-//------------------------------------------------------------------------------
-
-// deal with *, /, and %
 double term()
 {
-    double left = primary();
-    Token t = ts.get();        // get the next token from token stream
-
-    while (true)
-    {
-        switch (t.kind)
-        {
-        case '*':
-            left *= primary();
-            t = ts.get();
-            break;
-        case '/':
-        {
-            double d = primary();
-            if (d == 0) error("divide by zero");
-            left /= d;
-            t = ts.get();
-            break;
-        }
-        default:
-            ts.putback(t);     // put t back into the token stream
-            return left;
-        }
-    }
+	double left = primary();
+	while (true)
+	{
+		Token t = ts.get();
+		switch (t.kind)
+		{
+		case '*':
+			left *= primary();
+			break;
+		case '/':
+		{
+			double d = primary();
+			if (d == 0) error("divide by zero");
+			left /= d;
+			break;
+		}
+		default:
+			ts.unget(t);
+			return left;
+		}
+	}
 }
 
-//------------------------------------------------------------------------------
-
-// deal with + and -
 double expression()
 {
-    double left = term();      // read and evaluate a Term
-    Token t = ts.get();        // get the next token from token stream
-
-    while (true)
-    {
-        switch (t.kind)
-        {
-        case '+':
-            left += term();    // evaluate Term and add
-            t = ts.get();
-            break;
-        case '-':
-            left -= term();    // evaluate Term and subtract
-            t = ts.get();
-            break;
-        default:
-            ts.putback(t);     // put t back into the token stream
-            return left;       // finally: no more + or -: return the answer
-        }
-    }
+	double left = term();
+	while (true)
+	{
+		Token t = ts.get();
+		switch (t.kind)
+		{
+		case '+':
+			left += term();
+			break;
+		case '-':
+			left -= term();
+			break;
+		default:
+			ts.unget(t);
+			return left;
+		}
+	}
 }
 
-//------------------------------------------------------------------------------
+double declaration()
+{
+	Token t = ts.get();
+	if (t.kind != 'a') error("name expected in declaration");
+	string name = t.name;
+	if (is_declared(name)) error(name, " declared twice");
+	Token t2 = ts.get();
+	if (t2.kind != '=') error("= missing in declaration of ", name);
+	double d = expression();
+	names.push_back(Variable(name, d));
+	return d;
+}
+
+double statement()
+{
+	Token t = ts.get();
+	switch (t.kind)
+	{
+	case let:
+		return declaration();
+	default:
+		ts.unget(t);
+		return expression();
+	}
+}
+
+void clean_up_mess()
+{
+	ts.ignore(print);
+}
+
+const string prompt = "> ";
+const string result = "= ";
+
+void calculate()
+{
+	while (true) try
+	{
+		ofs << prompt;
+		Token t = ts.get();
+		while (t.kind == print) t = ts.get();
+		if (t.kind == quit) return;
+		ts.unget(t);
+		ofs << result << statement() << endl;
+	}
+	catch (runtime_error& e)
+	{
+		ofs << e.what() << endl;
+		clean_up_mess();
+	}
+}
 
 int main()
+
 try
 {
-    cout << "Welcome to our simple calculator.\n";
-    cout << "Please enter expressions using floating-point numbers.\n";
-    cout << "Operators available: +, -, *, /, ().\n";
-    cout << "To print the result, enter ';' and to quit, enter 'q'.\n";
-    while (cin)
-    {
-        cout << "> ";   // print prompt
-        Token t = ts.get();
-        while (t.kind == ';') t = ts.get();   // eat ';'
-        if (t.kind == 'q')
-        {
-            keep_window_open();
-            return 0;
-        }
-        ts.putback(t);
-        cout << "= " << expression() << endl;
-    }
-    keep_window_open();
-    return 0;
+	if (!ofs || !ifs)
+	{
+		error("file system error");
+	}
+	calculate();
+	return 0;
 }
 catch (exception& e)
 {
-    cerr << "error: " << e.what() << '\n';
-    keep_window_open("~~");
-    return 1;
+	cerr << "exception: " << e.what() << endl;
+	char c;
+	while (ifs >> c && c != ';');
+	return 1;
 }
 catch (...)
 {
-    cerr << "Oops: unknown exception!\n";
-    keep_window_open("~~");
-    return 2;
+	cerr << "exception\n";
+	char c;
+	while (ifs >> c && c != ';');
+	return 2;
 }
-
-//------------------------------------------------------------------------------
-
